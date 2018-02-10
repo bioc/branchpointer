@@ -382,7 +382,7 @@ getBranchpointSequence <- function(query, uniqueId = "test",
     mcols(queryAllPoints)$to_3prime_point <-
       rep(rep(44:18,each = length(query$id)),2)
   }else{
-    queryAllPoints <- do.call("c",as.list(rep(query, 27)))
+    queryAllPoints <- rep(query, 27)
     mcols(queryAllPoints)$status <- rep("REF", length(seqs))
     queryAllPoints$seq <- seqs
     mcols(queryAllPoints)$to_3prime_point <-
@@ -438,7 +438,8 @@ getBranchpointSequence <- function(query, uniqueId = "test",
     parallel::stopCluster(cluster)
   }else{
     canonHits <- lapply(f, getCanonical3SS)
-    pyra <- lapply(queryAllPoints, getPPT)
+    pyra <- lapply(seq_along(queryAllPoints),
+                   function(i) getPPT(queryAllPoints[i]))
   }
 
   canon <- matrix(unlist(canonHits), ncol = 5, byrow = TRUE)
