@@ -188,8 +188,8 @@ getPPT <- function(attributes){
 #' @importFrom Biostrings getSeq
 #' @importFrom BSgenome.Hsapiens.UCSC.hg38 BSgenome.Hsapiens.UCSC.hg38
 #' @importFrom data.table fread
-#' @importFrom GenomeInfoDb seqlevels
-#' @importFrom GenomeInfoDb seqnames
+#' @importFrom Seqinfo seqlevels
+#' @importFrom Seqinfo seqnames
 #' @importClassesFrom data.table data.table
 #' @keywords internal
 #' @author Beth Signal
@@ -291,23 +291,23 @@ getBranchpointSequence <- function(query, uniqueId = "test",
     width(ranges(bed))  <- 528
     
     # check if chromosomes need to renamed
-    seqlevels.genome <- GenomeInfoDb::seqlevels(BSgenome)
-    seqlevels.bed <- GenomeInfoDb::seqlevels(bed)
+    seqlevels.genome <- Seqinfo::seqlevels(BSgenome)
+    seqlevels.bed <- Seqinfo::seqlevels(bed)
     
     # used chromosomes 
-    seqnames.bed <- as.character(GenomeInfoDb::seqnames(bed))
+    seqnames.bed <- as.character(Seqinfo::seqnames(bed))
     
     if(!(all(seqnames.bed %in% seqlevels.genome))){
       
       # try adding/removing chr from bed
       if(!all(stringr::str_sub(seqlevels.bed, 1, 3) == "chr")){
-         GenomeInfoDb::seqlevels(bed) <- paste0("chr", seqlevels.bed)
+         Seqinfo::seqlevels(bed) <- paste0("chr", seqlevels.bed)
       }else if(all(stringr::str_sub(seqlevels.bed, 1, 3) == "chr")){
-         GenomeInfoDb::seqlevels(bed) <- gsub("chr", "", seqlevels.bed)
+         Seqinfo::seqlevels(bed) <- gsub("chr", "", seqlevels.bed)
       }
       
-      seqlevels.bed <- GenomeInfoDb::seqlevels(bed)
-      seqnames.bed <- as.character(GenomeInfoDb::seqnames(bed))
+      seqlevels.bed <- Seqinfo::seqlevels(bed)
+      seqnames.bed <- as.character(Seqinfo::seqnames(bed))
       
       # if that doesn't fix the issue, break
       if(!(all(seqnames.bed %in% seqlevels.genome))){
